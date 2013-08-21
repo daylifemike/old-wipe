@@ -31,6 +31,8 @@ class PhotoSwiper {
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
 
         add_action( 'wp_ajax_photoswiper_save', array( __CLASS__, 'save_options' ) );
+
+        add_filter( 'plugin_action_links', array( __CLASS__, 'plugin_action_links' ), 10, 2);
     }
 
     public static function add_admin_page() {
@@ -65,6 +67,22 @@ class PhotoSwiper {
         update_option( 'photoswiper', json_encode( $_POST['photoswiper'] ) );
         echo "kafka";
         die();
+    }
+
+    public static function plugin_action_links($links, $file) {
+        // http://wp.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
+        static $this_plugin;
+
+        if (!$this_plugin) {
+            $this_plugin = plugin_basename(__FILE__);
+        }
+
+        if ($file == $this_plugin) {
+            $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=photoswiper">Settings</a>';
+            array_unshift($links, $settings_link);
+        }
+
+        return $links;
     }
 } // end PhotoSwiper
 ?>
