@@ -46,7 +46,7 @@
         angular.forEach(plugin_schema, function(field, i){
             field.value = field.default;
 
-            if (photoswiper_saved_data[field.name]) {
+            if (photoswiper_saved_data && photoswiper_saved_data[field.name]) {
                 // sanitize the data?
                 field.value = photoswiper_saved_data[field.name];
             }

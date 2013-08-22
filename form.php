@@ -2,7 +2,7 @@
     $options = get_option('photoswiper');
 ?>
 <script>
-    var photoswiper_saved_data = angular.fromJson( <?php echo $options ?> );
+    var photoswiper_saved_data = angular.fromJson( <?php echo $options ?> ) || {};
 </script>
 
 <style>

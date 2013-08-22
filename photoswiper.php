@@ -52,10 +52,12 @@ class PhotoSwiper {
         wp_register_script( 'angularjs', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', array('jquery'), '1.0.7', true );
         wp_enqueue_script( 'angularjs' );
 
-        if (is_admin()) {
-            wp_enqueue_script( 'photoswiper_admin_form', plugins_url('app.js', __FILE__ ), array( 'angularjs' ) );
+        if ( is_admin() && isset($_GET['page']) ) {
+            if ( $_GET['page'] == "photoswiper.php" || $_GET['page'] == "photoswiper" ) {
+                wp_enqueue_script( 'photoswiper_admin_form', plugins_url('app.js', __FILE__ ), array( 'angularjs' ) );
+            }
         } else {
-
+            // frontsite
         }
     }
 
