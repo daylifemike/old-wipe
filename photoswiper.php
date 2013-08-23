@@ -30,8 +30,6 @@ class PhotoSwiper {
         add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'load_scripts' ) );
 
-        add_action( 'wp_ajax_photoswiper_save', array( __CLASS__, 'save_options' ) );
-
         add_filter( 'plugin_action_links', array( __CLASS__, 'plugin_action_links' ), 10, 2);
     }
 
@@ -48,27 +46,25 @@ class PhotoSwiper {
     }
 
     public static function load_scripts() {
-        wp_enqueue_script( 'jquery' );
+        PhotoSwiper::print_options();
+
         wp_register_script( 'angularjs', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', array('jquery'), '1.0.7', true );
+        wp_register_script( 'photoswiper_schema', plugins_url('schema.js', __FILE__ ), array( 'angularjs' ) );
+        wp_register_script( 'photoswiper_admin', plugins_url('admin-app.js', __FILE__ ), array( 'angularjs' ) );
+        wp_register_script( 'photoswiper_frontsite', plugins_url('frontsite-app.js', __FILE__ ), array( 'angularjs' ) );
+
+        wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'angularjs' );
 
         if ( is_admin() && isset($_GET['page']) ) {
             if ( $_GET['page'] == "photoswiper.php" || $_GET['page'] == "photoswiper" ) {
-                wp_enqueue_script( 'photoswiper_admin_form', plugins_url('app.js', __FILE__ ), array( 'angularjs' ) );
+                wp_enqueue_script( 'photoswiper_schema' );
+                wp_enqueue_script( 'photoswiper_admin' );
             }
         } else {
-            // frontsite
+            wp_enqueue_script( 'photoswiper_schema' );
+            wp_enqueue_script( 'photoswiper_frontsite' );
         }
-    }
-
-    public static function save_options() {
-        // error_log(print_r($_POST, TRUE), 0);
-        print_r( json_encode($_POST) );
-        echo "<br>";
-        print_r($_REQUEST);
-        update_option( 'photoswiper', json_encode( $_POST['photoswiper'] ) );
-        echo "kafka";
-        die();
     }
 
     public static function plugin_action_links($links, $file) {
@@ -85,6 +81,21 @@ class PhotoSwiper {
         }
 
         return $links;
+    }
+
+    public static function print_options() {
+        $options = get_option('photoswiper');
+        echo('
+            <script>
+                (function (window) {
+                    if (!window.PhotoSwiper) {
+                        window.PhotoSwiper = {};
+                    }
+
+                    window.PhotoSwiper.saved_data = '. $options .';
+                }(window));
+            </script>
+        ');
     }
 } // end PhotoSwiper
 ?>

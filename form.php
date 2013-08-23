@@ -1,11 +1,5 @@
-<?php 
-    $options = get_option('photoswiper');
-?>
-<script>
-    var photoswiper_saved_data = angular.fromJson( <?php echo $options ?> ) || {};
-</script>
-
 <style>
+    .form-table { font-size:12px; }
     .form-table tbody:nth-child(odd) { background:#eee; }
 </style>
 
@@ -19,9 +13,15 @@
         </div>
     <?php } ?>
 
-    <form id="photoswiper-form" method="post" action="options.php" ng-submit="submit()" form-watch="photoswiper" ng-controller="photoswiperCtrl">
+    <form id="photoswiper-form" method="post" action="options.php" ng-submit="submit()" ng-controller="formCtrl" ng-cloak>
         <?php settings_fields('photoswiper_options'); ?>
-        <input type="hidden" name="photoswiper" ng-model="photoswiper"/>
+
+        <!--
+            Wordpress's "register_settings" stuff can't save an array so I keep a JSON obj of the form's data
+            that ends up being the only value that WP saves.
+        -->
+        <input type="text" name="photoswiper" ng-model="photoswiper" form-watch="photoswiper" style="display:none;"/>
+
         <table class="form-table">
             <tbody ng-repeat="field in schema" ng-switch on="field.type">
                 <tr valign="top" ng-switch-when="bool">
