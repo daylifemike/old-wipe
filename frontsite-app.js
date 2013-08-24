@@ -55,6 +55,8 @@
             console.log( clean_list );
         }
 
-        $image_links.photoSwipe(data);
+        if ( $image_links.length > 0 ) {
+            $image_links.photoSwipe(data);
+        }
     });
 }(jQuery, window));
