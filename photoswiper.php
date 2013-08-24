@@ -48,22 +48,22 @@ class PhotoSwiper {
     public static function load_scripts() {
         PhotoSwiper::print_options();
 
-        wp_register_script( 'angularjs', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', array('jquery'), '1.0.7', true );
-        wp_register_script( 'photoswiper_schema', plugins_url('schema.js', __FILE__ ), array( 'angularjs' ) );
-        wp_register_script( 'photoswiper_admin', plugins_url('admin-app.js', __FILE__ ), array( 'angularjs' ) );
-        wp_register_script( 'photoswiper_frontsite', plugins_url('frontsite-app.js', __FILE__ ), array( 'angularjs' ) );
+        wp_register_script( 'angularjs', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', array('jquery') );
 
-        wp_enqueue_script( 'jquery' );
-        wp_enqueue_script( 'angularjs' );
+        wp_register_script( 'photoswiper_schema', plugins_url('schema.js', __FILE__ ), array( 'angularjs' ) );
+        wp_register_script( 'photoswiper_admin', plugins_url('admin-app.js', __FILE__ ), array( 'angularjs', 'photoswiper_schema' ) );
+        wp_register_script( 'photoswiper_frontsite', plugins_url('frontsite-app.js', __FILE__ ), array( 'angularjs', 'photoswipe_js', 'photoswiper_schema' ) );
+
+        wp_register_script( 'photoswipe_klass', plugins_url('photoswipe/lib/klass.min.js', __FILE__ ), array( 'jquery' ) );
+        wp_register_script( 'photoswipe_js', plugins_url('photoswipe/code.photoswipe.jquery-3.0.5.min.js', __FILE__ ), array( 'jquery', 'photoswipe_klass' ), '3.0.5' );
 
         if ( is_admin() && isset($_GET['page']) ) {
             if ( $_GET['page'] == "photoswiper.php" || $_GET['page'] == "photoswiper" ) {
-                wp_enqueue_script( 'photoswiper_schema' );
                 wp_enqueue_script( 'photoswiper_admin' );
             }
         } else {
-            wp_enqueue_script( 'photoswiper_schema' );
             wp_enqueue_script( 'photoswiper_frontsite' );
+            wp_enqueue_style( 'photoswipe_css', plugins_url('photoswipe/photoswipe.css', __FILE__ ) );
         }
     }
 
